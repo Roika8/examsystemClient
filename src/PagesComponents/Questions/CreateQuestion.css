@@ -1,0 +1,54 @@
+.createQuestionContainer {
+    width: max-content;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.header {
+    font-weight: bolder;
+    text-align: center;
+    margin: 5px;
+    font-size: larger;
+
+}
+
+.header.topic {
+    font-size: medium;
+    font-weight: 500;
+    text-align: left;
+    padding: 10px;
+}
+
+.inputBlock {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.inputBlock span {
+    color: grey;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.ck-editor__editable {
+    min-height: 100px;
+    min-width: 700px;
+    max-width: calc(100vw - 200px);
+    max-height: 300px;
+}
+
+.fields {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.buttons {
+    margin: auto;
+}
+
+.buttons>#childBtn {
+    margin-top: 15px;
+    margin-left: 50px;
+}

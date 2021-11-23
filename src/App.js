@@ -1,23 +1,44 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 
-function App() {
+import ManagerLogin from './PagesComponents/ManagerLogin';
+import ManagerMainMenu from './PagesComponents/ManagerMainMenu';
+import CreateQuestion from './PagesComponents/Questions/CreateQuestion';
+import QuestionsManagement from './PagesComponents/Questions/QuestionsManagement';
+import CreateTest from './PagesComponents/Tests/CreateTest';
+import TestManagment from './PagesComponents/Tests/TestsManagement';
+import SearchStudentReport from './PagesComponents/Reports/Student/SearchStudentReport';
+import StudentsReports from './PagesComponents/Reports/Student/StudentsReports';
+import SearchTestReport from './PagesComponents/Reports/Test/SearchTestReport';
+import TestsReports from './PagesComponents/Reports/Test/TestsReports';
+import ReportsMenu from './PagesComponents/Reports/ReportsMenu';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <BrowserRouter>
+        <div>
+          <Switch>
+            <Route path='/' exact component={ManagerMainMenu} />
+            <Route path='/questions' exact component={QuestionsManagement} />
+            <Route path='/questions/new/:topic' exact component={CreateQuestion} />
+            <Route path='/tests' exact component={TestManagment} />
+            <Route path='/tests/new' exact component={CreateTest} />
+            <Route path='/reports' exact component={ReportsMenu} />
+            <Route path='/reports/students' exact component={SearchStudentReport} />
+            <Route path='/reports/students/:studentTestID'>
+              <StudentsReports />
+            </Route>
+            <Route path='/reports/tests' exact component={SearchTestReport} />
+            <Route path='/reports/tests/:testID'>
+              <TestsReports />
+            </Route>
+            <Route path="/Login" exact component={ManagerLogin} />
+            <Route path="*"><Redirect to="/" /></Route>
+          </Switch>
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
