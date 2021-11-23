@@ -19,15 +19,17 @@ const CreateQuestion = () => {
     const [questionID] = useState(uuid());
     const [isHorizontal, setIsHorizontal] = useState(true);
     const [isSingleChoice, setIsSingleChoice] = useState(true);
-    const [questionTitle, setQuestionTitle] = useState("");
+    const [title, setQuestionTitle] = useState("");
     const [textBelowQuestion, setTextBelowQuestion] = useState("");
     const [answers, setAnswers] = useState([]);
-    const [answersDic] = useState(new Array(4).fill({ content: ' ', correct: false }));
     const [tags, setTags] = useState("");
     const [openAnswerPreview, setOpenAnswerPreview] = useState(false);
 
     const handleAnswers = (data) => {
         setAnswers(data);
+    }
+    const submitQuestion = () => {
+        QuestionsService.addQuestion({title,isSingleChoice,tags,isHorizontal,textBelowQuestion,answers});
     }
     return (
         <div className="createQuestionContainer">
@@ -47,7 +49,7 @@ const CreateQuestion = () => {
                         config={{
                             removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
                         }}
-                        data={questionTitle}
+                        data={title}
                         onChange={(event, editor) => {
                             const data = editor.getData();
                             setQuestionTitle(data);
@@ -81,14 +83,14 @@ const CreateQuestion = () => {
                 <div className="buttons">
                     <Button id="childBtn" variant="contained" color="warning">Back</Button>
                     <Button id="childBtn" variant="contained" color="secondary" onClick={() => { setOpenAnswerPreview(!openAnswerPreview); }}>Show</Button>
-                    <Button id="childBtn" color="success" variant="contained" >Save</Button>
+                    <Button id="childBtn" color="success" variant="contained" onClick={()=>submitQuestion()} >Save</Button>
 
                 </div>
 
                 <QuestionPreview
                     isDialogOpened={openAnswerPreview}
                     handleCloseDialog={() => setOpenAnswerPreview(false)}
-                    questionText={questionTitle}
+                    questionText={title}
                     textBelowQuestion={textBelowQuestion}
                     answers={answers}
                     tags={tags}
