@@ -4,7 +4,6 @@ import parse from 'html-react-parser';
 import './QuestionPreview.css'
 const QuestionPreview = ({ isDialogOpened, handleCloseDialog, questionText, textBelowQuestion, answers, tags, questionID, isHorizontal }) => {
     const [aligenClassName, setAligenClassName] = useState('horizontalAnswers');
-    console.log(answers);
     useEffect(() => {
         setAligenClassName(prevState => prevState !== 'verticalAnswers' ? 'verticalAnswers' : 'horizontalAnswers');
     }, [isHorizontal])

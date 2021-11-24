@@ -48,7 +48,7 @@
     margin: auto;
 }
 
-.buttons>#childBtn {
+.buttons>.childBtn {
     margin-top: 15px;
     margin-left: 50px;
 }

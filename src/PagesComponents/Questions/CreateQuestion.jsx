@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 //Components
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -10,13 +10,12 @@ import { FormGroup, Select, MenuItem, Button, RadioGroup, Radio, FormControlLabe
 import './CreateQuestion.css';
 import { useParams } from 'react-router-dom';
 //Packages
-import { uuid } from 'uuidv4';
 
 //Services
-import QuestionsService from '../../ApiServices/QuestionsService';
+import questionsService from '../../ApiServices/questionsService';
+import questionsValidator from '../../ApiServices/questionsValidator';
 const CreateQuestion = () => {
     const { topic } = useParams();
-    const [questionID] = useState(uuid());
     const [isHorizontal, setIsHorizontal] = useState(true);
     const [isSingleChoice, setIsSingleChoice] = useState(true);
     const [title, setQuestionTitle] = useState("");
@@ -28,8 +27,24 @@ const CreateQuestion = () => {
     const handleAnswers = (data) => {
         setAnswers(data);
     }
-    const submitQuestion = () => {
-        QuestionsService.addQuestion({title,isSingleChoice,tags,isHorizontal,textBelowQuestion,answers});
+    const submitQuestion = async () => {
+        if (!questionsValidator.validateTitle(title)) {
+            alert("Your question has to be with title");
+            return;
+        }
+        if (!questionsValidator.validateAnswersContent(answers)) {
+            alert("Not all answers have content");
+            return;
+        }
+        if (!questionsValidator.validateAnswersCorrect(answers)) {
+            alert("You need to check at least 1 correct answer");
+            return;
+        }
+
+        const questionAdded = await questionsService.addQuestion({ title, topic, isSingleChoice, tags, isHorizontal, textBelowQuestion, answers });
+        if (questionAdded) alert('Question Added successfully !')
+        else alert('Somthing went wrong adding the question ..')
+
     }
     return (
         <div className="createQuestionContainer">
@@ -81,9 +96,9 @@ const CreateQuestion = () => {
                     <TextField fullWidth label="Tags" variant="outlined" value={tags} onChange={(e) => setTags(e.target.value)} />
                 </div>
                 <div className="buttons">
-                    <Button id="childBtn" variant="contained" color="warning">Back</Button>
-                    <Button id="childBtn" variant="contained" color="secondary" onClick={() => { setOpenAnswerPreview(!openAnswerPreview); }}>Show</Button>
-                    <Button id="childBtn" color="success" variant="contained" onClick={()=>submitQuestion()} >Save</Button>
+                    <Button className="childBtn" variant="contained" color="warning">Back</Button>
+                    <Button className="childBtn" variant="contained" color="secondary" onClick={() => { setOpenAnswerPreview(!openAnswerPreview); }}>Show</Button>
+                    <Button className="childBtn" color="success" variant="contained" onClick={() => submitQuestion()} >Save</Button>
 
                 </div>
 
@@ -94,8 +109,6 @@ const CreateQuestion = () => {
                     textBelowQuestion={textBelowQuestion}
                     answers={answers}
                     tags={tags}
-                    //Change the question ID
-                    questionID={questionID}
                     isHorizontal={isHorizontal} />
             </FormGroup>
 

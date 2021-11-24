@@ -7,16 +7,24 @@ import './AnswersSelection.css';
 const AnswersSelection = ({ questionID, singleChoice, answersFromComp }) => {
     const [answers, setAnswers] = useState(new Array(4).fill({ content: '', correct: false }));
 
+    //Disable all checked correct answers if single choice is selected
+    useEffect(() => {
+        if (singleChoice && answers.filter(ans => ans.correct === true).length > 1) {
+            console.log('here');
+            let answersArray = [...answers];
+            answersArray.map(ans => ans.correct = false);
+            setAnswers(answersArray);
+        }
+    }, [singleChoice])
     const removeAnswer = (index) => {
         //Bug here if content is not empty
         const answersArray = [...answers];
         const newarray = answersArray.filter((ans, ansIndex) => ansIndex !== index);
         console.log(newarray);
         answersFromComp(newarray);
-
         setAnswers(newarray);
     }
-   
+
     const editAnswer = (editor, index) => {
         const data = editor.getData();
         let answersArray = [...answers];
@@ -72,7 +80,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp }) => {
                             />
                             <div className="answerOptions">
                                 <Button color="error" onClick={() => removeAnswer(index)}>Remove</Button>
-                                <FormControlLabel className="checkBox" control={<Checkbox color="success" checked={answers[index].correct} />} label="Currect" onChange={(e) => { correctAnswerHandler(e, index) }} />
+                                <FormControlLabel className="checkBox" control={<Checkbox color="success" checked={answers[index].correct} />} label="Correct" onChange={(e) => { correctAnswerHandler(e, index) }} />
                             </div>
                         </div>
                     </ListItem>
