@@ -44,11 +44,3 @@
     margin-right: 5%;
 }
 
-.buttons {
-    margin: auto;
-}
-
-.buttons>.childBtn {
-    margin-top: 15px;
-    margin-left: 50px;
-}

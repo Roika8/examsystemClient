@@ -10,6 +10,7 @@ import { FormGroup, Select, MenuItem, Button, RadioGroup, Radio, FormControlLabe
 import './CreateQuestion.css';
 import { useParams } from 'react-router-dom';
 //Packages
+import { Link } from 'react-router-dom';
 
 //Services
 import questionsService from '../../ApiServices/questionsService';
@@ -96,7 +97,7 @@ const CreateQuestion = () => {
                     <TextField fullWidth label="Tags" variant="outlined" value={tags} onChange={(e) => setTags(e.target.value)} />
                 </div>
                 <div className="buttons">
-                    <Button className="childBtn" variant="contained" color="warning">Back</Button>
+                    <Button className="childBtn" component={Link} to="/questions" variant="contained" color="warning">Back</Button>
                     <Button className="childBtn" variant="contained" color="secondary" onClick={() => { setOpenAnswerPreview(!openAnswerPreview); }}>Show</Button>
                     <Button className="childBtn" color="success" variant="contained" onClick={() => submitQuestion()} >Save</Button>
 

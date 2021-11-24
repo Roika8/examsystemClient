@@ -11,6 +11,10 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
   },
+  "peerDependencies": {
+    "@mui/material": "^5.0.0",
+    "react": "^17.0.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
