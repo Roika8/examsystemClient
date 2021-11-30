@@ -4,9 +4,23 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { List, Button, ListItem, FormControlLabel, Checkbox } from '@mui/material';
 
 import './AnswersSelection.css';
-const AnswersSelection = ({ questionID, singleChoice, answersFromComp }) => {
-    const [answers, setAnswers] = useState(new Array(4).fill({ content: '', correct: false }));
+import { lightGreen } from '@mui/material/colors';
+const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnswers }) => {
+    const [answers, setAnswers] = useState([]);
 
+    useEffect(() => {
+        let answersArray = [];
+        if (existAnswers !== undefined) {
+            existAnswers.map(ans => {
+                answersArray.push({ content: ans.content, correct: ans.correct });
+            })
+        }
+        else {
+            answersArray = new Array(4).fill({ content: '', correct: false });
+        }
+        setAnswers(answersArray);
+
+    }, [])
     //Disable all checked correct answers if single choice is selected
     useEffect(() => {
         if (singleChoice && answers.filter(ans => ans.correct === true).length > 1) {

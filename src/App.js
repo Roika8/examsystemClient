@@ -21,9 +21,11 @@ const App = () => {
         <div>
           <Switch>
             <Route path='/' exact component={ManagerMainMenu} />
-            <Route path='/questions' exact component={QuestionsManagement} />
-            <Route path='/questions/new/:topic' exact component={CreateQuestion} />
-            <Route path='/tests' exact component={TestManagment} />
+            <Route path='/questions/:topicID' exact component={QuestionsManagement} />
+            <Route path='/questions/new/:topicID' exact component={CreateQuestion} />
+            <Route path='/questions/edit/:topicID/:questionID' exact component={CreateQuestion} />
+
+            <Route path='/tests/:topicID' exact component={TestManagment} />
             <Route path='/tests/new' exact component={CreateTest} />
             <Route path='/reports' exact component={ReportsMenu} />
             <Route path='/reports/students' exact component={SearchStudentReport} />

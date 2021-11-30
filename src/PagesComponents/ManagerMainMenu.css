@@ -1,0 +1,11 @@
+.mainMenuContainer{
+    display: grid;
+    place-items:  center;
+    font-size: 25px;
+    height : 500px;
+}
+.mainHeader{
+ font-weight: bold;
+ font-size: 40px;
+ color: rgb(42, 42, 42);
+}
