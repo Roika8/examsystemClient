@@ -66,10 +66,18 @@ const CreateQuestion = () => {
             alert("You need to check at least 1 correct answer");
             return;
         }
+        const questionObj = { title, topicID, isSingleChoice, tags, isHorizontal, textBelowQuestion, answers }
+        const questionAdded =
+            questionID === undefined
+                ? await questionsService.addQuestion(questionObj)
+                : await questionsService.editQuestion(questionObj, questionID);
 
-        const questionAdded = await questionsService.addQuestion({ title, topicID, isSingleChoice, tags, isHorizontal, textBelowQuestion, answers });
         if (questionAdded) {
-            alert('Question Added successfully !');
+            if (questionID === undefined)
+                alert('Question Added successfully !');
+            else
+                alert('Question updated successfully !');
+
             history.push(`/questions/${topicID}`)
         }
         else alert('Somthing went wrong adding the question ..')

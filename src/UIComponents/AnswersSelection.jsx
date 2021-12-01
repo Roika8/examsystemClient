@@ -4,7 +4,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { List, Button, ListItem, FormControlLabel, Checkbox } from '@mui/material';
 
 import './AnswersSelection.css';
-import { lightGreen } from '@mui/material/colors';
 const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnswers }) => {
     const [answers, setAnswers] = useState([]);
 

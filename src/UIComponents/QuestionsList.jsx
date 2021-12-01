@@ -13,6 +13,7 @@ import CreateQuestion from '../PagesComponents/Questions/CreateQuestion';
 //Services
 import questionsService from '../ApiServices/questionsService';
 const QuestionsList = ({ questionsList, topicID }) => {
+    console.log(questionsList);
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [openAnswerPreview, setOpenAnswerPreview] = useState(false);

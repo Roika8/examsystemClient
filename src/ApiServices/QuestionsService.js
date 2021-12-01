@@ -35,7 +35,12 @@ const getQuestionByID = async (id) => {
         console.log(e);
     }
 }
-const editQuestion = async (id) => {
-
+const editQuestion = async (question, id) => {
+    try {
+        return await axios.put(`${config.questionPath}/editQuestion/${id}`, question);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
-export default { addQuestion, getAllQuestionsByTopicID, getAnswersByQuestionID, editQuestion,getQuestionByID };
+export default { addQuestion, getAllQuestionsByTopicID, getAnswersByQuestionID, editQuestion, getQuestionByID };
