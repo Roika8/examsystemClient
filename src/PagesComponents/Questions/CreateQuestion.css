@@ -1,16 +1,15 @@
-.createQuestionContainer {
+/* .createQuestionContainer {
     width: max-content;
     margin: auto;
     border: 1px solid black;
     border-radius: 10px;
-}
+} */
 
 .header {
     font-weight: bolder;
     text-align: center;
     margin: 5px;
     font-size: larger;
-
 }
 
 .header.topic {
@@ -20,17 +19,7 @@
     padding: 10px;
 }
 
-.inputBlock {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-}
 
-.inputBlock span {
-    color: grey;
-    margin-left: 5px;
-    margin-bottom: 5px;
-}
 
 .ck-editor__editable {
     min-height: 100px;

@@ -18,20 +18,24 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
             answersArray = new Array(4).fill({ content: '', correct: false });
         }
         setAnswers(answersArray);
-
     }, [])
+
     //Disable all checked correct answers if single choice is selected
     useEffect(() => {
         if (singleChoice && answers.filter(ans => ans.correct === true).length > 1) {
-            console.log('here');
             let answersArray = [...answers];
             answersArray.map(ans => ans.correct = false);
             setAnswers(answersArray);
         }
     }, [singleChoice])
+
+    useEffect(() => {
+        console.log(answers);
+    }, [answers])
     const removeAnswer = (index) => {
         //Bug here if content is not empty
         const answersArray = [...answers];
+        console.log(answersArray);
         const newarray = answersArray.filter((ans, ansIndex) => ansIndex !== index);
         console.log(newarray);
         answersFromComp(newarray);
@@ -54,14 +58,16 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
     const correctAnswerHandler = (event, index) => {
         let answersArray = [...answers];
         let selectedAnswer = { ...answersArray[index] };
+        //Empty answers get removed correct
         if (selectedAnswer.content.trim() === '') {
             selectedAnswer.correct = false;
         }
+        //Cannot check more then 1 correct answer if single choice
         else if (singleChoice && answersArray.filter(e => e.correct === true).length > 0) {
             selectedAnswer.correct = false;
         }
         else {
-            selectedAnswer.correct = !answersArray.correct;
+            selectedAnswer.correct = !selectedAnswer.correct;
         }
         answersArray[index] = selectedAnswer;
         answersFromComp(answersArray);
@@ -75,7 +81,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
     }
 
     return (
-        <React.Fragment>
+        <>
             <span className="answersHeader">Possible answers</span>
             <List>
                 {answers && answers.map((value, index) => (
@@ -100,7 +106,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
                 ))}
             </List>
             <Button onClick={() => addAnswer()}>Add answer</Button>
-        </React.Fragment>
+        </>
     )
 }
 export default AnswersSelection;

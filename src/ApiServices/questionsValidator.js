@@ -6,7 +6,10 @@ const validateTitle = (title) => {
 const validateAnswersCorrect = (answers) => {
     return answers.filter(ans => ans.correct === true).length > 0;
 }
+const validateMuiltiAnswersCorrect = (answers) => {
+    return answers.filter(ans => ans.correct === true).length > 1;
+}
 const validateAnswersContent = (answers) => {
     return (answers.filter(ans =>parse(ans.content).length !== 0).length) === (answers.length);
 }
-export default { validateTitle, validateAnswersCorrect, validateAnswersContent };
+export default { validateTitle, validateAnswersCorrect, validateAnswersContent,validateMuiltiAnswersCorrect };

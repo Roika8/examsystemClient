@@ -1,0 +1,6 @@
+.questionContainer {
+    border: 1px solid green;
+    margin: auto;
+    width: 600px;
+    height: max-content;
+}

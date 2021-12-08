@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 //Components
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import QuestionPreview from '../../UIComponents/QuestionPreview';
 import AnswersSelection from '../../UIComponents/AnswersSelection';
 
@@ -10,6 +8,8 @@ import { FormGroup, Select, MenuItem, Button, RadioGroup, Radio, FormControlLabe
 import './CreateQuestion.css';
 import { useParams } from 'react-router-dom';
 //Packages
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Link, useHistory } from 'react-router-dom';
 
 //Services
@@ -23,7 +23,7 @@ const CreateQuestion = () => {
     const [isHorizontal, setIsHorizontal] = useState(true);
     const [isSingleChoice, setIsSingleChoice] = useState(true);
     const [title, setQuestionTitle] = useState("");
-    const [textBelowQuestion, setTextBelowQuestion] = useState("");
+    const [textBelowTitle, setTextBelowTitle] = useState("");
     const [answers, setAnswers] = useState([]);
     const [tags, setTags] = useState("");
     const [openAnswerPreview, setOpenAnswerPreview] = useState(false);
@@ -31,8 +31,7 @@ const CreateQuestion = () => {
     //Get the topic name when page is uploading
     useEffect(() => {
         //Load question details if exist
-        if (questionID !== undefined)
-            loadExistQuestion();
+        questionID !== undefined && loadExistQuestion();
 
         const getTopicName = async () => {
             const topic = await topicService.getTopicByID(topicID);
@@ -44,15 +43,13 @@ const CreateQuestion = () => {
         const questionData = await questionsService.getQuestionByID(questionID);
         const questionsAnswers = await questionsService.getAnswersByQuestionID(questionID);
         setQuestionTitle(questionData.title);
-        setTextBelowQuestion(questionData.textBelowTitle);
+        setTextBelowTitle(questionData.textBelowTitle);
         setIsHorizontal(questionData.isHorizontal);
         setIsSingleChoice(questionData.isSingleChoice);
         setTags(questionData.tags);
         setAnswers(questionsAnswers);
     }
-    const handleAnswers = (data) => {
-        setAnswers(data);
-    }
+
     const submitQuestion = async () => {
         if (!questionsValidator.validateTitle(title)) {
             alert("Your question has to be with title");
@@ -66,7 +63,11 @@ const CreateQuestion = () => {
             alert("You need to check at least 1 correct answer");
             return;
         }
-        const questionObj = { title, topicID, isSingleChoice, tags, isHorizontal, textBelowQuestion, answers }
+        if (!isSingleChoice && !questionsValidator.validateMuiltiAnswersCorrect(answers)) {
+            alert("If you checked question type as muiltiple, you need to select more then 1 correct answer");
+            return;
+        }
+        const questionObj = { title, topicID, isSingleChoice, tags, isHorizontal, textBelowTitle, answers }
         const questionAdded =
             questionID === undefined
                 ? await questionsService.addQuestion(questionObj)
@@ -84,7 +85,7 @@ const CreateQuestion = () => {
 
     }
     return (
-        <div className="createQuestionContainer">
+        <div className="formContainer">
             <FormGroup>
                 <div className="header">Create new question </div>
                 <div className="header topic">Topic : {topicName} </div>
@@ -114,19 +115,19 @@ const CreateQuestion = () => {
                         config={{
                             removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
                         }}
-                        data={textBelowQuestion}
+                        data={textBelowTitle}
                         onChange={(event, editor) => {
                             const data = editor.getData();
-                            setTextBelowQuestion(data);
+                            setTextBelowTitle(data);
                         }}
 
                     />
                 </div>
                 {questionID !== undefined
                     ?
-                    (answers.length > 0 && < AnswersSelection singleChoice={isSingleChoice} answersFromComp={handleAnswers} existAnswers={answers} />)
+                    (answers.length > 0 && < AnswersSelection singleChoice={isSingleChoice} answersFromComp={(data) => setAnswers(data)} existAnswers={answers} />)
                     :
-                    < AnswersSelection singleChoice={isSingleChoice} answersFromComp={handleAnswers} />
+                    < AnswersSelection singleChoice={isSingleChoice} answersFromComp={(data) => {setAnswers(data)}} />
                 }
                 <div className="fields">
                     <RadioGroup value={isHorizontal} row onChange={(e) => { setIsHorizontal(e.target.value); }}>
@@ -146,12 +147,10 @@ const CreateQuestion = () => {
 
                 <QuestionPreview
                     isDialogOpened={openAnswerPreview}
+                    question={{ openAnswerPreview, title, textBelowTitle, answers, tags, isHorizontal }}
                     handleCloseDialog={() => setOpenAnswerPreview(false)}
-                    questionText={title}
-                    textBelowQuestion={textBelowQuestion}
-                    answers={answers}
-                    tags={tags}
-                    isHorizontal={isHorizontal} />
+                />
+
             </FormGroup>
 
         </div >

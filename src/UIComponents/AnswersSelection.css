@@ -12,13 +12,3 @@
    float: right;
 }
 
-.inputBlock {
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-}
-
-.inputBlock span {
-    color: grey;
-    margin-left: 5px;
-}

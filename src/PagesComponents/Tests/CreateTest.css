@@ -1,0 +1,15 @@
+.grade {
+    width: 80px;
+}
+
+.header.id {
+    font-size: medium;
+    display: flex;
+    margin: auto;
+    align-items: flex-start;
+}
+
+.questionsListWrapper {
+  margin: auto;
+  width: calc(100vw - 550px);
+}

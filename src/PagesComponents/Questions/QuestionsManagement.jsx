@@ -34,7 +34,7 @@ const QuestionsManagement = () => {
             const tags = question.tags.split(',');
             return tags.some(tag => tag.includes(value)) && question;
         })
-        const filterdResults=[...new Set([...namesFilter,...tagsFilter])];
+        const filterdResults = [...new Set([...namesFilter, ...tagsFilter])];
         setFilteredQuestions(filterdResults);
         if (!value)
             setFilteredQuestions(allQuestions);
@@ -47,7 +47,7 @@ const QuestionsManagement = () => {
             <div className="searchBar">
                 <TextField onChange={(e) => handleQuestionsFilter(e.target.value)} id="standard-basic" label="Search question by tags or name" variant="standard" className="styleInput" />
             </div>
-            {<QuestionsList questionsList={filteredQuestions} topicID={topicID} />}
+            {<QuestionsList questionsList={filteredQuestions} topicID={topicID} test={false} />}
 
             <div className="buttons">
                 <Button className="childBtn" component={Link} to="/" color="secondary" variant="contained">Back</Button>

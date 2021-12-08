@@ -1,0 +1,10 @@
+.testContainer {
+    width: calc(100vw - 150px);
+    height: calc(100vh - 200px);
+    margin: auto;
+    margin-top: 5%;
+    border: 2px solid black;
+}
+.questionHeader{
+    text-align: center;
+}

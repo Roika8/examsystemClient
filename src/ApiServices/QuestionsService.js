@@ -29,7 +29,7 @@ const getAnswersByQuestionID = async (id) => {
 const getQuestionByID = async (id) => {
     try {
         const data = (await axios.get(`${config.questionPath}/getQuestionByID/${id}`)).data;
-        return data[0];
+        return data;
     }
     catch (e) {
         console.log(e);

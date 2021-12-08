@@ -9,24 +9,14 @@ import parse from 'html-react-parser';
 import './QuestionsList.css';
 //Components
 import QuestionPreview from './QuestionPreview';
-import CreateQuestion from '../PagesComponents/Questions/CreateQuestion';
 //Services
 import questionsService from '../ApiServices/questionsService';
-const QuestionsList = ({ questionsList, topicID }) => {
-    console.log(questionsList);
+const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existTestQuestions }) => {
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [openAnswerPreview, setOpenAnswerPreview] = useState(false);
+    const [selectedQuestion, setSelectedQuestion] = useState({});
 
-    const [isHorizontal, setIsHorizontal] = useState(true);
-    const [title, setTitle] = useState("");
-    const [textBelowQuestion, setTextBelowQuestion] = useState("");
-    const [answers, setAnswers] = useState([]);
-    const [tags, setTags] = useState("");
-    const [ID, setID] = useState(-1);
-    const [lastChange, setLastChange] = useState();
-
-    const [rowSelected, setRowSelected] = useState(false);
     //Load data rows
     useEffect(() => {
         const rowsFromData = [];
@@ -45,34 +35,46 @@ const QuestionsList = ({ questionsList, topicID }) => {
             });
         setRows(rowsFromData);
 
+        //Check if on test mode and show test exist questions
+        if (existTestQuestions && existTestQuestions.length > 0) {
+            handleSelectedQuestions(existTestQuestions)
+        }
     }, [questionsList])
 
 
-    //Get answers of selected question
-    useEffect(() => {
-        const getAnswers = async () => {
-            const res = ID !== -1 ? await questionsService.getAnswersByQuestionID(ID) : [];
-            setAnswers(res);
-        }
-        getAnswers();
-    }, [ID])
-
+    //Handle question actions
     const clickedCell = (params) => {
         switch (params.field) {
             case 'Delete':
                 break;
             case 'Show':
+                console.log(selectedQuestion);
                 setOpenAnswerPreview(!openAnswerPreview);
                 break;
             case 'Edit':
                 { history.push(`/questions/edit/${topicID}/${params.id}`); }
                 break;
             default:
-                console.log('Error in the clicked cell value or name');
-                prompt('Error in the clicked cell value or name');
+                console.log(params);
                 break;
         }
+    }
 
+    //Get the selected answers Props
+    const handleSelectedQuestions = (questionsIDs) => {
+        if (questionsIDs.length !== 0) {
+            const questionID = questionsIDs[0];
+            const foundQuestion = questionsList.filter(element => element.ID === questionID)[0];
+            setSelectedQuestion(foundQuestion);
+
+            //Give to parent component questions IDs
+            if (test) {
+                selectedQuestions(questionsIDs);
+            }
+        }
+        else {
+            selectedQuestions([]);
+        }
 
     }
 
@@ -80,7 +82,7 @@ const QuestionsList = ({ questionsList, topicID }) => {
     const columns = [
         { field: 'ID', minWidth: 100, headerAlign: 'center', align: 'center' },
         {
-            field: 'Question Title and Tags', minWidth: 300, headerAlign: 'center', align: 'center', renderCell: (params) => {
+            field: 'Question Title and Tags', minWidth: 200, headerAlign: 'center', align: 'center', renderCell: (params) => {
                 return (
                     <div className="questionTagsTitle">
                         <div className="title" >
@@ -93,11 +95,11 @@ const QuestionsList = ({ questionsList, topicID }) => {
                 );
             }
         },
-        { field: 'Last change', minWidth: 250, headerAlign: 'center', align: 'center' },
-        { field: 'Question Type', minWidth: 150, headerAlign: 'center', align: 'center' },
+        { field: 'Last change', minWidth: 120, headerAlign: 'center', align: 'center' },
+        { field: 'Question Type', minWidth: 120, headerAlign: 'center', align: 'center' },
         { field: '# Of tests', minWidth: 100, headerAlign: 'center', align: 'center' },
         {
-            field: 'Show', minWidth: 150, headerAlign: 'center', align: 'center', renderCell: () => {
+            field: 'Show', minWidth: 100, headerAlign: 'center', align: 'center', renderCell: () => {
                 return (
                     <React.Fragment>
                         <Button className="childBtn" variant="contained" color="secondary">
@@ -108,7 +110,7 @@ const QuestionsList = ({ questionsList, topicID }) => {
             }
         },
         {
-            field: 'Delete', minWidth: 150, headerAlign: 'center', align: 'center', renderCell: () => {
+            field: 'Delete', minWidth: 100, headerAlign: 'center', align: 'center', renderCell: () => {
                 return (
                     <React.Fragment>
                         <Button className="childBtn" variant="contained" color="warning" disabled={true}>
@@ -119,7 +121,7 @@ const QuestionsList = ({ questionsList, topicID }) => {
             }
         },
         {
-            field: 'Edit', minWidth: 150, headerAlign: 'center', align: 'center', renderCell: () => {
+            field: 'Edit', minWidth: 100, headerAlign: 'center', align: 'center', renderCell: () => {
                 return (
                     <React.Fragment>
                         <Button className="childBtn" variant="contained" color="success">
@@ -133,34 +135,16 @@ const QuestionsList = ({ questionsList, topicID }) => {
 
     return (
         <div className="dataGrid">
-            <DataGrid
-                rows={rows}
-                columns={columns}
-
-                //Get the selected answers Props
-                onSelectionModelChange={questionID => {
-                    questionID = questionID[0];
-                    const foundQuestion = questionsList.filter(element => element.ID === questionID)[0];
-                    setID(foundQuestion.ID);
-                    setTitle(foundQuestion.title);
-                    setTextBelowQuestion(foundQuestion.textBelowTitle);
-                    setTags(foundQuestion.tags);
-                    setIsHorizontal(foundQuestion.isHorizontal);
-                    setLastChange(foundQuestion.lastChange);
-                    setRowSelected(true);
-                }}
-                onCellClick={clickedCell} />
+            <DataGrid rows={rows} columns={columns} selectionModel={existTestQuestions}
+                onSelectionModelChange={questionsIDs => { handleSelectedQuestions(questionsIDs); }}
+                onCellClick={clickedCell}
+                checkboxSelection={test} />
             {
-                <QuestionPreview
+                Object.keys(selectedQuestion).length > 0 &&
+                <QuestionPreview question={selectedQuestion}
                     isDialogOpened={openAnswerPreview}
                     handleCloseDialog={() => setOpenAnswerPreview(false)}
-                    questionText={title}
-                    textBelowQuestion={textBelowQuestion}
-                    answers={answers}
-                    tags={tags}
-                    isHorizontal={isHorizontal}
-                    questionID={ID}
-                    lastChange={lastChange} />
+                />
             }
 
         </div>

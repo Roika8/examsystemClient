@@ -1,8 +1,9 @@
 .dataGrid {
     height: calc(100vh - 250px);
     width: calc(100vw - 100px);
-    margin: auto;
     margin-top: 1%;
+    text-align: center;
+    align-content: center;
 }
 
 .questionTagsTitle {
