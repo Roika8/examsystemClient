@@ -1,0 +1,17 @@
+
+.testResults {
+    text-align: center;
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    border-width: 5px;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    margin-top: 10%;
+
+}
+
+.testResults>div {
+    padding: 10px;
+    margin-top: 10px;
+}

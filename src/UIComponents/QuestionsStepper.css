@@ -1,10 +1,29 @@
 .testContainer {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
     width: calc(100vw - 150px);
     height: calc(100vh - 200px);
     margin: auto;
     margin-top: 5%;
-    border: 2px solid black;
+    border: 2px solid rgb(118, 118, 118);
+    border-radius: 20px;
+    padding: 30px;
 }
-.questionHeader{
-    text-align: center;
+
+.questionIndex {
+    /* grid-row-start / grid-column-start / grid-row-end / grid-column-end */
+    grid-area: 1/2/1/2;
+    /* On row */
+    justify-self: center;
+    /* on column */
+    align-self: center;
+}
+
+.testNavigation {
+    grid-area: 3/2/3/2;
+    /* On row */
+    justify-self: center;
+    /* on column */
+    align-self: flex-start;
 }

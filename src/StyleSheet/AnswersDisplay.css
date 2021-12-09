@@ -1,0 +1,21 @@
+.showHorizontal {
+    flex-direction: row;
+}
+
+.showVertical {
+    flex-direction: column;
+}
+
+.answer {
+    flex: auto;
+}
+
+.correctAnswer {
+    color: green;
+    font-weight: bold;
+}
+
+.wrongAnswer {
+    color: red;
+    font-weight: lighter;
+}
