@@ -15,7 +15,7 @@ import TestsReports from './PagesComponents/Reports/Test/TestsReports';
 import ReportsMenu from './PagesComponents/Reports/ReportsMenu';
 import StudentTestForm from './PagesComponents/StudentTest/StudentTestForm';
 import Test from './PagesComponents/StudentTest/Test';
-
+import TestStudentData from './UIComponents/Reports/TestStudentData';
 const App = () => {
   return (
     <div>
@@ -34,13 +34,14 @@ const App = () => {
             <Route path='/tests/edit/:topicID/:existTestID' exact component={CreateTest} />
 
             {/*Reports routes */}
-            <Route path='/reports' exact component={ReportsMenu} />
-            <Route path='/reports/students' exact component={SearchStudentReport} />
-            <Route path='/reports/students/:studentTestID' exact component={StudentsReports} />
+            <Route path='/reports/:topicID' exact component={ReportsMenu} />
+            <Route path='/reports/:topicID/students' exact component={SearchStudentReport} />
+            <Route path='/reports/:topicID/students/:studentTestID' exact component={StudentsReports} />
 
-            <Route path='/reports/tests' exact component={SearchTestReport} />
-            <Route path='/reports/tests/:testID' component={TestsReports} />
+            <Route path='/reports/:topicID/tests' exact component={SearchTestReport} />
+            <Route path='/reports/:topicID/tests/:testID/from/:fromDate/to/:toDate' component={TestsReports} />
 
+            <Route path='/reports/testStudentReport/:studentEmail' exact component={TestStudentData} />
             {/* Student test route */}
             <Route path='/studentTest/form/:testID' exact component={StudentTestForm} />
             <Route path='/onTest/:studentEmail/:testID' exact component={Test} />

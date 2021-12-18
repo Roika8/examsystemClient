@@ -2,5 +2,6 @@
     "questionPath": "http://localhost:4000/api/Questions",
     "topicPath":"http://localhost:4000/api/Topics",
     "testPath":"http://localhost:4000/api/Tests",
-    "studentPath":"http://localhost:4000/api/Students"
+    "studentPath":"http://localhost:4000/api/Students",
+     "reportPath":"http://localhost:4000/api/Reports"
 }

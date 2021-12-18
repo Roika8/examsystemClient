@@ -35,9 +35,10 @@ const editTest = async (test) => {
         console.log(e);
     }
 }
-const sumbitTestRusults = async (testRusults, studentEmail, testID) => {
+const sumbitTestRusults = async (testResults, studentEmail, testID) => {
     try {
-        const testResult = await (await axios.post(`${config.testPath}/submitTest/${testID}/${studentEmail}`, testRusults)).data;
+        console.log(testResults);
+        const testResult = await (await axios.post(`${config.testPath}/submitTest/${testID}/${studentEmail}`, testResults)).data;
         return testResult;
     }
     catch (e) {

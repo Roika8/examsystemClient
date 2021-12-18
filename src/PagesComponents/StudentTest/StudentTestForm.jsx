@@ -9,10 +9,10 @@ import studentTestService from '../../ApiServices/studentTestService';
 const StudentTestForm = () => {
     const { testID } = useParams();
     const history = useHistory();
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [email, setEmail] = useState();
-    const [phoneNumber, setPhoneNumber] = useState();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const submitTest = async () => {
         const res = await studentTestService.addStudent({ firstName, lastName, email, phoneNumber });
         if (res) {
@@ -32,7 +32,7 @@ const StudentTestForm = () => {
                         variant="filled"
                         value={firstName}
                         onChange={(e) => {
-                            setFirstName(e.target.value);
+                            setFirstName(e.target.value.toLowerCase());
                         }}
                         inputProps={{ style: { background: 'white' } }}
                     />
@@ -43,7 +43,7 @@ const StudentTestForm = () => {
                         variant="filled"
                         value={lastName}
                         onChange={(e) => {
-                            setLastName(e.target.value);
+                            setLastName(e.target.value.toLowerCase());
                         }}
                         inputProps={{ style: { background: 'white' } }}
                     />
@@ -66,7 +66,7 @@ const StudentTestForm = () => {
                         value={email}
                         type="email"
                         onChange={(e) => {
-                            setEmail(e.target.value);
+                            setEmail(e.target.value.toLowerCase());
                         }}
 
                         inputProps={{ style: { maxLength: 10, background: 'white' } }}

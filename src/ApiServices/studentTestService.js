@@ -9,4 +9,13 @@ const addStudent = async (student) => {
         console.log(e);
     }
 }
-export default { addStudent };
+const getAllStudents = async () => {
+    try {
+        return await (await axios.get(`${config.studentPath}/getAllStudents`)).data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+export default { addStudent, getAllStudents };

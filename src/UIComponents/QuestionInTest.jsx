@@ -3,36 +3,32 @@ import { RadioGroup, FormControlLabel, Radio, Checkbox } from '@mui/material';
 import parse from 'html-react-parser';
 import './QuestionInTest.css';
 import '../StyleSheet/AnswersDisplay.css';
-const QuestionInTest = ({ question, selectedAnswersIDs, userSelectedAnswers, setAnswers, isEnglish }) => {
-    // const [aligenClassName, setAligenClassName] = useState();
-    const [answersOfQuestion, setAnswersOfQuestion] = useState(question.answers)
-    //Inilize here the what i selected
-    const [selectedAnswersIds, setSelectedAnswersIds] = useState([]);
+const QuestionInTest = ({ question, currentSelectedAnswerID, userSelectedAnswers, setAnswers, isEnglish }) => {
+    const [answersOfQuestion, setAnswersOfQuestion] = useState()
+    //Inilize here the what I selected
+    const [selectedAnswersIds, setSelectedAnswersIds] = useState('');
+
 
     //Every question showup
     useEffect(() => {
-        console.log(question.isHorizontal);
-        // setAligenClassName(question.isHorizontal ? 'horizontalAnswers' : 'verticalAnswers');
         //Load selected answers on show mode, if not show mode, test mode selected answers
         if (userSelectedAnswers) {
-            //Multi answers
-            if (Array.isArray(userSelectedAnswers)) {
-                userSelectedAnswers.map(userAnswer => {
-                    const foundAns = answersOfQuestion.find(ans => ans.ID == userAnswer);
-                    foundAns.selected = true;
-                })
-            }
-            //Single answer
-            else {
-                const foundAns = answersOfQuestion.find(ans => ans.ID == userSelectedAnswers);
-
-            }
+            const modifiedAnswers = modifyAnswersArray(question.answers);
+            setAnswersOfQuestion(modifiedAnswers)
         }
-        //Test mode
         else {
-            setSelectedAnswersIds([])
+            //Test mode
+            //TODO- fix the bug of multi answers (this is now current solution)
+            question.isSingleChoice ?
+                setSelectedAnswersIds(currentSelectedAnswerID)
+                :
+                setSelectedAnswersIds([]);
+            setAnswersOfQuestion(question.answers)
+
         }
     }, [question])
+
+
 
 
     //Give to the parent component the selected answers
@@ -42,6 +38,30 @@ const QuestionInTest = ({ question, selectedAnswersIDs, userSelectedAnswers, set
             selectedAnswersIds && setAnswers(selectedAnswersIds);
     }, [selectedAnswersIds])
 
+    //Add to array to prop selected
+    const modifyAnswersArray = (answersArray) => {
+        answersArray.map(ans => {
+            ans.selected = false;
+        })
+        if (Array.isArray(userSelectedAnswers)) {
+            userSelectedAnswers.map(userAnswer => {
+                answersArray.map(ans => {
+                    if (ans.ID == userAnswer)
+                        ans.selected = true
+                })
+            })
+        }
+        //Single answer
+        else {
+            answersArray.map(ans => {
+                if (ans.ID == userSelectedAnswers) {
+                    ans.selected = true
+                }
+            })
+
+        }
+        return answersArray;
+    }
     //Handle radio button selection
     const handleSelectedSingleAnswer = (value) => {
         setSelectedAnswersIds(value);
@@ -49,54 +69,65 @@ const QuestionInTest = ({ question, selectedAnswersIDs, userSelectedAnswers, set
 
     //Handle checkbox selection
     const handleSelectedMultiAnswer = (answer) => {
-        answer.checked ?
-            setSelectedAnswersIds(prevArray => [...prevArray, answer.value]) :
+        answer.checked
+            ?
+            setSelectedAnswersIds(prevArray => [...prevArray, answer.value])
+            :
             setSelectedAnswersIds(selectedAnswersIds.filter(ansID => ansID != answer.value))
     }
     return (
         <div className='questionContainer'>
-            <div className={`questionHeader ${isEnglish ? 'english' : 'hebrew'}`}>
+            <div className={`questionHeaders ${isEnglish ? 'english' : 'hebrew'}`}>
                 <div>{parse(question.title)}</div>
                 <div>{parse(question.textBelowTitle)}</div>
             </div>
-            <div className={`questionContent ${question.isHorizontal ? 'showHorizontal' : 'showVertical'} ${isEnglish ? 'english' : 'hebrew'}`}>
+            <div className={`content ${question.isHorizontal === true ? 'showHorizontal' : 'showVertical'} ${isEnglish ? 'english' : 'hebrew'}`}>
                 {
-                    //show results mode
-                    userSelectedAnswers
+                    answersOfQuestion
                         ?
-                        question.answers && question.answers.map(((ans, index) => {
-                            return (
-                                <div key={index} className={`answer  ${ans.correct === true ? 'correctAnswer' : 'wrongAnswer'} ${ans.selected && 'selected'}`}>{parse(ans.content)}</div>
-                            )
-                        }))
-
-
-                        //Test mode
-                        :
-                        /* //Change the horizonal option */
-                        //If single choice, radio btn, if muilt choice, checkbox
-                        question.isSingleChoice
+                        //show results mode
+                        userSelectedAnswers
                             ?
-                            <RadioGroup value={selectedAnswersIds} row={question.isHorizontal==true ? true : false} onChange={(e) => handleSelectedSingleAnswer(e.target.value)}>
-                                {question.answers && question.answers.map(((ans, index) => {
-                                    return (
-                                        <FormControlLabel key={index} value={ans.ID} control={<Radio />}
-                                            label={parse(ans.content)}
-                                            labelPlacement={isEnglish ? 'end' : 'start'} />
-                                    )
-                                }))}
-                            </RadioGroup>
-                            :
-                            question.answers && question.answers.map(((ans, index) => {
+                            answersOfQuestion.map(((ans, index) => {
                                 return (
-                                    <div className='answer'>
-                                        <FormControlLabel value={ans.ID} control={<Checkbox color="success" />} label={parse(ans.content)}
-                                            onChange={(e) => handleSelectedMultiAnswer(e.target)}
-                                            labelPlacement={isEnglish ? 'end' : 'start'} />
-                                    </div>
-
+                                    <div key={index} className={`answer ${ans.correct === true ? 'correctAnswer' : 'wrongAnswer'} ${ans.selected == true ? 'selected' : ''}`}>{parse(ans.content)}</div>
                                 )
                             }))
+
+
+                            //Test mode
+                            :
+                            //If single choice, radio btn, if multi choice, checkbox
+                            question.isSingleChoice
+                                ?
+                                <RadioGroup value={selectedAnswersIds && selectedAnswersIds} row={question.isHorizontal == true ? true : false}
+                                    onChange={(e) => handleSelectedSingleAnswer(e.target.value)}>
+                                    {answersOfQuestion.map(((ans, index) => {
+                                        return (
+                                            <FormControlLabel key={index} value={ans.ID} control={<Radio />}
+                                                label={parse(ans.content)}
+                                                labelPlacement={isEnglish ? 'end' : 'start'} />
+                                        )
+                                    }))}
+                                </RadioGroup>
+                                :
+                                answersOfQuestion.map(((ans, index) => {
+                                    return (
+                                        <div className='answer' key={index}>
+                                            <FormControlLabel
+                                                defaultValue={true}
+                                                label={parse(ans.content)}
+                                                value={ans.ID}
+                                                control={<Checkbox color="success" />}
+                                                onChange={(e) => handleSelectedMultiAnswer(e.target)}
+                                                labelPlacement={isEnglish ? 'end' : 'start'}
+                                            />
+                                        </div>
+
+                                    )
+                                }))
+                        :
+                        <div>Load answers</div>
                 }
             </div>
         </div>

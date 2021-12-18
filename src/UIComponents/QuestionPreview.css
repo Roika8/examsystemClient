@@ -36,20 +36,5 @@
      justify-self: center;
  }
 
- .detailsWrapper {
-     display: grid;
-     grid-template-rows: auto auto;
-     padding: 20px
- }
-
- .questionHeaders {
-     grid-area: 1/1/1/1;
-     justify-self: center;
-     text-align: center;
- }
-
- .content {
-     grid-area: 2/1/2/1;
-     display: flex;
- }
+ 
 

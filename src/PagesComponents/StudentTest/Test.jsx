@@ -35,6 +35,9 @@ const Test = () => {
         setNumberOfCorrectAnswers(testResult.correctAnswersCount);
         setFinishTest(true);
     }
+    useEffect(() => {
+     
+    }, [userSelectedAnswers])
     return (
         <>
             Test : {testID}
@@ -45,7 +48,8 @@ const Test = () => {
                     (!finishTest)
                         ?
                         //Show questions
-                        <QuestionsStepper questions={test.questions} isEnglish={test.isEnglish} setResults={(testResults => handleTestResults(testResults))} />
+                        <QuestionsStepper questions={test.questions} isEnglish={test.isEnglish}
+                            setResults={(testResults => handleTestResults(testResults))} />
                         :
                         //Show results
                         <div className='testResults'>
@@ -68,7 +72,8 @@ const Test = () => {
                     :
                     //Test is finish and see test results
                     showTestResults &&
-                    <QuestionsStepper questions={test.questions} isEnglish={test.isEnglish} userResults={userSelectedAnswers} />
+                    <QuestionsStepper questions={test.questions} isEnglish={test.isEnglish}
+                        userResults={userSelectedAnswers} />
 
             }
         </>

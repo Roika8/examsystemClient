@@ -44,8 +44,6 @@ const TestsList = ({ testsList, topicID, selectedTests }) => {
                 console.log(params);
                 break;
         }
-
-
     }
 
 

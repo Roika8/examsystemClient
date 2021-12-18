@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pagination, Stack, Button, Typography, Box, Paper, MobileStepper } from '@mui/material';
+import { Pagination, Stack, Button, MobileStepper } from '@mui/material';
 
 import './QuestionsStepper.css'
 import QuestionInTest from './QuestionInTest';
@@ -7,25 +7,44 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
     const maxSteps = questions.length;
     const [activeStep, setActiveStep] = useState(0);
     const [correntQuestion, setCorrentQuestion] = useState();
-    const [answersSelected, setAnswersSelected] = useState([]);
-    const [correntQuestionAnswered, setCorrentQuestionAnswered] = useState();
+    const [answersSelection, setAnswersSelection] = useState([]);
+    //User result
+    const [userAnswerSelected, setUserAnswerSelected] = useState();
     //Inilize the first question to the first.
     useEffect(() => {
         // Load first question data
-        setCorrentQuestion(questions[0]);
-        userResults && setCorrentQuestionAnswered(userResults[0]);
+        if (questions.length > 0) {
+            questions.sort((a, b) => a.ID - b.ID);
+            console.log(questions);
+            setCorrentQuestion(questions[0]);
+        }
+        //Load answers data
+        initSelectedAnswersArray();
+
+        //Load user answers - show mode
+        if (userResults) {
+            userResults.sort((a, b) => a.questionID - b.questionID);
+            console.log(userResults);
+            setUserAnswerSelected(userResults[0]);
+        }
+    }, [])
+
+    //Show current question by step
+    useEffect(() => {
+        setCorrentQuestion(questions[activeStep]);
+        //Show results- show mode
+        userResults && setUserAnswerSelected(userResults[activeStep]);
+    }, [activeStep])
+
+    //Load answers data
+    const initSelectedAnswersArray = () => {
         const selectedAnswersquestions = [];
         questions.map(question => {
             selectedAnswersquestions.push({ questionID: question.ID, selectedAnswers: [] })
         })
-        setAnswersSelected(selectedAnswersquestions);
-    }, [])
+        setAnswersSelection(selectedAnswersquestions);
+    }
 
-    //Show crrent question by step
-    useEffect(() => {
-        setCorrentQuestion(questions[activeStep]);
-        userResults && setCorrentQuestionAnswered(userResults[activeStep]);
-    }, [activeStep])
 
     //Go forward
     const handleNext = () => {
@@ -40,14 +59,14 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
     //Save answers of each question
     const handleSelectedAnswers = (selectedAnswers) => {
         if (selectedAnswers.length > 0) {
-            const questionIndex = answersSelected.findIndex(obj => obj.questionID === correntQuestion.ID);
-            const ansSelected = [...answersSelected];
+            const questionIndex = answersSelection.findIndex(obj => obj.questionID === correntQuestion.ID);
+            const ansSelected = [...answersSelection];
             ansSelected[questionIndex].selectedAnswers = selectedAnswers;
-            setAnswersSelected(ansSelected);
+            setAnswersSelection(ansSelected);
         }
     }
     const handleSubmit = () => {
-        !userResults && setResults(answersSelected);
+        !userResults && setResults(answersSelection);
     }
     return (
         <>
@@ -55,8 +74,6 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                 <div className='testContainer'>
                     <div className='questionIndex'>
                         {isEnglish ? `Questions # ${activeStep + 1}` : `שאלה # ${activeStep + 1}`}
-
-
                     </div>
                     {
                         correntQuestion ?
@@ -66,7 +83,7 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                                 <QuestionInTest
                                     question={correntQuestion}
                                     index={activeStep + 1}
-                                    userSelectedAnswers={correntQuestionAnswered}
+                                    userSelectedAnswers={userAnswerSelected.selectedAnswers}
                                     isEnglish={true}
                                 />
                                 :
@@ -76,6 +93,7 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                                     index={activeStep + 1}
                                     setAnswers={(selectedAnswers) => handleSelectedAnswers(selectedAnswers)}
                                     isEnglish={isEnglish}
+                                    currentSelectedAnswerID={answersSelection.filter(ans => ans.questionID == correntQuestion.ID)[0].selectedAnswers}
                                 />
                             :
                             <div>Loading</div>
@@ -88,11 +106,11 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                             activeStep={activeStep}
                             nextButton={
                                 activeStep === maxSteps - 1 ?
-                                    <Button size="small" onClick={handleSubmit} variant="contained" color="success">
+                                    <Button disabled={userResults !== undefined} size="small" onClick={handleSubmit} variant="contained" color="success">
                                         {isEnglish ? `Submit` : `שלח מבחן`}
                                     </Button>
                                     :
-                                    <Button size="small" onClick={handleNext} variant="contained" color="secondary">
+                                    <Button disabled={activeStep === maxSteps} size="small" onClick={handleNext} variant="contained" color="secondary">
                                         {isEnglish ? 'Next' : 'הבא'}
                                     </Button>
 

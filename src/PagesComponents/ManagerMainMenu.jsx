@@ -33,8 +33,7 @@ const ManagerMainMenu = () => {
             <div className="buttons">
                 <Button className="childBtn" component={Link} to={{ pathname: `/tests/${selectedTopic.ID}` }} color="secondary" variant="contained">Manage Tests</Button>
                 <Button className="childBtn" component={Link} to={{ pathname: `/questions/${selectedTopic.ID}` }} color="success" variant="contained">Manage questions</Button>
-                <Button className="childBtn" component={Link} to="/reports" color="warning" variant="contained">Reports</Button>
-
+                <Button className="childBtn" component={Link} to={{ pathname: `/reports/${selectedTopic.ID}` }} color="warning" variant="contained">Reports</Button>
             </div>
 
         </div >

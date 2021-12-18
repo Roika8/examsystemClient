@@ -35,7 +35,7 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
             });
         setRows(rowsFromData);
 
-        //Check if on test mode and show test exist questions
+        //Check if on test mode and show test exist questions --bug
         if (existTestQuestions && existTestQuestions.length > 0) {
             handleSelectedQuestions(existTestQuestions)
         }

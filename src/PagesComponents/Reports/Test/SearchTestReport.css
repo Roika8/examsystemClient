@@ -1,0 +1,56 @@
+.topic {
+    text-align: start;
+    font-size: 20px;
+    margin-left: 70px;
+}
+
+.topicLabel {
+    color: orange;
+    font-size: 40px;
+    margin-left: 15px;
+}
+
+.testReportForm {
+    margin: auto;
+    margin-top: 10%;
+    width: calc(100vw - 300px);
+    height: calc(100vh - 500px);
+    background-color: rgba(98, 126, 126, 0.074);
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto auto;
+
+}
+
+
+.testsListContainer {
+    grid-area: 1/2/1/4;
+    padding-top: 20px;
+}
+
+.testsList {
+    text-align: center;
+}
+
+.dateRangeContainter {
+    grid-area: 2/2/4/4;
+    align-self: flex-end;
+    padding-top: 15px;
+
+    justify-self: center;
+}
+
+
+.generateBtn {
+    justify-self: flex-end;
+    align-self: flex-end;
+    padding: 15px;
+    grid-area: 4/4/4/4;
+}
+
+.backBtn {
+    justify-self: flex-start;
+    align-self: flex-end;
+    padding: 15px;
+    grid-area: 4/1/4/1;
+}
