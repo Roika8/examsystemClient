@@ -24,5 +24,13 @@ const getStudentTests = async (studentEmail) => {
         console.log(e);
     }
 }
+const getStudentTestReport = async (testID, studentEmail) => {
+    try {
+        return await (await axios.get(`${config.reportPath}/getStudentTestReport/${testID}/${studentEmail}`)).data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
 
-export default { getTestReportByDates, getQuestionsReport,getStudentTests };
+export default { getTestReportByDates, getQuestionsReport, getStudentTests, getStudentTestReport };

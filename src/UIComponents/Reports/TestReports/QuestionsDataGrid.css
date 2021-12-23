@@ -1,3 +1,9 @@
-.answersContainer{
-    width: 300px;
+.answersContainer {
+    width: 20vw;
+}
+
+.questionsData {
+    position: absolute;
+    margin: auto;
+    width: 90%;
 }

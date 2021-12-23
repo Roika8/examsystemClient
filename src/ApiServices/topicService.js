@@ -6,7 +6,8 @@ const getTopics = async () => {
         return await (await axios.get(`${config.topicPath}/getTopics`)).data;
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e);
+
     }
 }
 const getTopicByID = async (id) => {
@@ -14,8 +15,7 @@ const getTopicByID = async (id) => {
         return await (await axios.get(`${config.topicPath}/getTopic/${id}`)).data;
     }
     catch (e) {
-        console.log(e);
-        return { ID: -1, content: 'invalid topic ID' };
+        throw new Error(e);
     }
 }
 export default { getTopics, getTopicByID };

@@ -19,6 +19,7 @@ const Test = () => {
 
     //User answers
     const [userSelectedAnswers, setUserSelectedAnswers] = useState();
+   
     useEffect(() => {
         const getTest = async () => {
             const test = await testService.getTestByID(testID);
@@ -35,14 +36,16 @@ const Test = () => {
         setNumberOfCorrectAnswers(testResult.correctAnswersCount);
         setFinishTest(true);
     }
-    useEffect(() => {
-     
-    }, [userSelectedAnswers])
+
     return (
+        test !== undefined &&
         <>
-            Test : {testID}
+            <div className="testDetailsContainer">
+                <div>{test.title}</div>
+            </div>
+
             {
-                test !== undefined && !showTestResults
+                !showTestResults
                     ?
                     //Test is loaded and and didnt finish test
                     (!finishTest)

@@ -1,0 +1,23 @@
+.errorsContainer {
+    height: calc(100vh - 200px);
+    width: calc(100vw - 400px);
+    border: 2px solid gainsboro;
+    border-radius: 10px;
+    background-color: ghostwhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.messageShow {
+    margin-top: 10%;
+    flex: 1;
+}
+
+.redirectHome {
+    flex: 5;
+
+}

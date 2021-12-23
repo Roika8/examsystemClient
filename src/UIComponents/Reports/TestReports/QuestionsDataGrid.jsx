@@ -12,20 +12,25 @@ const QuestionsDataGrid = ({ questionsData }) => {
         const rowsFromData = [];
         questionsData && questionsData.length > 0 &&
             questionsData.map(question => {
+                //parse the title
+                let questionTitle = parse(question.details.title).props.children;
+                while (typeof (questionTitle) === 'object') {
+                    questionTitle = questionTitle.props.children;
+                }
                 const rowObject = {
                     id: question.questionID,
-                    'Question': parse(question.details.title).props.children,
+                    'Question': questionTitle,
                     'Number of Submissions': question.numberOfAnswered,
-                    '% Answered Correcly': `${question.answeredCorrecly} %`,
+                    '% Answered Correcly': `${Math.round(question.answeredCorrecly)} %`,
                 }
                 rowsFromData.push(rowObject);
             });
         setStudentsDataRows(rowsFromData);
     }, [])
     const columns = [
-        { field: 'Question', minWidth: 130, headerAlign: 'center', align: 'center' },
-        { field: 'Number of Submissions', minWidth: 100, headerAlign: 'center', align: 'center' },
-        { field: '% Answered Correcly', minWidth: 250, headerAlign: 'center', align: 'center' },
+        { field: 'Question', minWidth: 400, headerAlign: 'center', align: 'center', fontSize: 'bold' },
+        { field: 'Number of Submissions', minWidth: 300, headerAlign: 'center', align: 'center' },
+        { field: '% Answered Correcly', minWidth: 200, headerAlign: 'center', align: 'center' },
     ];
     const handleCellClick = (params) => {
         console.log(params.id);
@@ -34,6 +39,7 @@ const QuestionsDataGrid = ({ questionsData }) => {
     }
     //After ID selected, open dialog
     useEffect(() => {
+        console.log(selectedQuestion);
         if (selectedQuestion)
             setOpenAnswerPreview(true);
     }, [selectedQuestion])
@@ -54,8 +60,7 @@ const QuestionsDataGrid = ({ questionsData }) => {
     }
     return (
         <>
-            <DataGrid rows={studentsDataRows} columns={columns}
-                onCellClick={handleCellClick} />
+            <DataGrid pagination pageSize={5} rows={studentsDataRows} columns={columns} onCellClick={handleCellClick} className='questionsData' />
             <Dialog open={openAnswerPreview} onClose={() => setOpenAnswerPreview(false)} >
                 <DialogContent>
                     <div className='answersContainer'>
@@ -63,7 +68,7 @@ const QuestionsDataGrid = ({ questionsData }) => {
                             selectedQuestion &&
                                 selectedQuestion.answersSelection ? selectedQuestion.answersSelection.map((ans, index) => {
                                     return (
-                                        <div> {parse(ans.content)} {<LinearProgressWithLabel variant='determinate' value={ans.selectedPercentage} />} </div>
+                                        <div key={index} className={`answer ${ans.correct === true ? 'correctAnswer' : 'wrongAnswer'}`}> {parse(ans.content)} {<LinearProgressWithLabel variant='determinate' value={ans.selectedPercentage} />} </div>
                                     )
                                 })
                                 :

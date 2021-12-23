@@ -5,7 +5,7 @@ const addTest = async (test) => {
         return await axios.post(`${config.testPath}/addTest`, test);
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 const getAllTestsByTopic = async (topicID) => {
@@ -14,16 +14,17 @@ const getAllTestsByTopic = async (topicID) => {
         return data;
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 const getTestByID = async (testID) => {
     try {
         const data = await (await axios.get(`${config.testPath}/getTestByID/${testID}`)).data;
+        console.log(data);
         return data;
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 const editTest = async (test) => {
@@ -33,6 +34,7 @@ const editTest = async (test) => {
     }
     catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 }
 const sumbitTestRusults = async (testResults, studentEmail, testID) => {
@@ -43,6 +45,7 @@ const sumbitTestRusults = async (testResults, studentEmail, testID) => {
     }
     catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 }
 

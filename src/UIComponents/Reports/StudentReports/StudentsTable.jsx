@@ -1,7 +1,7 @@
 import React from 'react'
 import {  TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
 
-const StudentsTable = ({studentsList,selectedStudentEmail}) => {
+const StudentsTable = ({studentsList,selectedStudentData}) => {
     return (
         <>
             <TableContainer component={Paper}>
@@ -16,7 +16,7 @@ const StudentsTable = ({studentsList,selectedStudentEmail}) => {
                     <TableBody>
                         {studentsList && studentsList.map((row) => {
                             return (
-                                <TableRow key={row.email} onClick={() => selectedStudentEmail(row.email)}>
+                                <TableRow key={row.email} onClick={() => selectedStudentData(row)}>
                                     <TableCell>{row.email}</TableCell>
                                     <TableCell>{row.firstName}</TableCell>
                                     <TableCell>{row.lastName}</TableCell>

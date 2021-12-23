@@ -5,6 +5,7 @@ import parse from 'html-react-parser';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const TestOfStudentRow = ({ question, answers }) => {
+    console.log(question.correct);
     const [open, setOpen] = useState(false);
     return (
         <React.Fragment>
@@ -16,7 +17,7 @@ const TestOfStudentRow = ({ question, answers }) => {
                 </TableCell>
                 <TableCell> {question.ID}</TableCell>
                 <TableCell>{parse(question.title)}</TableCell>
-                <TableCell>correct</TableCell>
+                <TableCell>{question.correct ? 'correct' : 'Incorrect'}</TableCell>
 
             </TableRow>
             <TableRow>

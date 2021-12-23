@@ -1,35 +1,26 @@
-/* .createQuestionContainer {
-    width: max-content;
-    margin: auto;
-    border: 1px solid black;
-    border-radius: 10px;
-} */
 
-.header {
+
+.questionHeader {
     font-weight: bolder;
     text-align: center;
-    margin: 5px;
-    font-size: larger;
+    font-size: x-large;
+    padding: 10px;
 }
 
-.header.topic {
+.header.questionTopic {
     font-size: medium;
     font-weight: 500;
-    text-align: left;
+    text-align: center;
     padding: 10px;
 }
 
 
 
-.ck-editor__editable {
-    min-height: 100px;
-    min-width: 700px;
-    max-width: calc(100vw - 200px);
-    max-height: 300px;
-}
+
 
 .fields {
     margin-left: 5%;
     margin-right: 5%;
+    width: 500px;
 }
 

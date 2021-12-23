@@ -15,7 +15,6 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
         // Load first question data
         if (questions.length > 0) {
             questions.sort((a, b) => a.ID - b.ID);
-            console.log(questions);
             setCorrentQuestion(questions[0]);
         }
         //Load answers data
@@ -24,7 +23,6 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
         //Load user answers - show mode
         if (userResults) {
             userResults.sort((a, b) => a.questionID - b.questionID);
-            console.log(userResults);
             setUserAnswerSelected(userResults[0]);
         }
     }, [])
@@ -59,15 +57,39 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
     //Save answers of each question
     const handleSelectedAnswers = (selectedAnswers) => {
         if (selectedAnswers.length > 0) {
+            let filteredSelectedAnswers;
+            if (Array.isArray(selectedAnswers)) {
+                filteredSelectedAnswers = getSelectedAnswerToByQuestion(correntQuestion, selectedAnswers);
+            }
+            else {
+                filteredSelectedAnswers = correntQuestion.answers.filter(ans => ans.ID == selectedAnswers)[0].ID;
+                console.log(filteredSelectedAnswers);
+            }
             const questionIndex = answersSelection.findIndex(obj => obj.questionID === correntQuestion.ID);
             const ansSelected = [...answersSelection];
-            ansSelected[questionIndex].selectedAnswers = selectedAnswers;
+            ansSelected[questionIndex].selectedAnswers = filteredSelectedAnswers;
+            console.log(ansSelected[questionIndex]);
             setAnswersSelection(ansSelected);
         }
     }
-    const handleSubmit = () => {
-        !userResults && setResults(answersSelection);
+    const getSelectedAnswerToByQuestion = (correntQuestion, selectedAnswers) => {
+        //Get the answers ID of the question
+        const answersOfQuestionIDsArray = correntQuestion.answers.map(ans => { return ans.ID.toString() });
+        //Filter the selected answers by the question answer
+        return selectedAnswers.filter(ansID => answersOfQuestionIDsArray.includes(ansID.toString()));
     }
+    const handleSubmit = () => {
+        if(isEnglish){
+            if (window.confirm('Are you sure you want to sumbit the test?'))
+            !userResults && setResults(answersSelection);
+        }
+        else{
+            if (window.confirm('את בטוח שאתה רוצה לשלוח את המבחן?'))
+            !userResults && setResults(answersSelection);
+        }
+
+    }
+
     return (
         <>
             {
@@ -84,7 +106,7 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                                     question={correntQuestion}
                                     index={activeStep + 1}
                                     userSelectedAnswers={userAnswerSelected.selectedAnswers}
-                                    isEnglish={true}
+                                    isEnglish={isEnglish}
                                 />
                                 :
                                 //Show questions mode
@@ -121,13 +143,12 @@ const QuestionsStepper = ({ questions, isEnglish, setResults, userResults }) => 
                                 </Button>
                             }
                         />
-                        <Stack spacing={2}>
-                            <Pagination count={10} showFirstButton showLastButton />
-                        </Stack>
+                        <div className="paginationContainer">
+                            <Pagination count={maxSteps} onChange={(_, val) => { setActiveStep(val - 1); }}
+                                color="primary" size="large"
+                                showFirstButton showLastButton page={activeStep-1} />
+                        </div>
                     </div>
-
-
-
                 </div >
             }
 

@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react'
+//Packages
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+//Style
 import { List, Button, ListItem, FormControlLabel, Checkbox } from '@mui/material';
-
 import './AnswersSelection.css';
-const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnswers }) => {
+const AnswersSelection = ({ singleChoice,selectedAnswers, existAnswers }) => {
     const [answers, setAnswers] = useState([]);
 
+    //Init answers
     useEffect(() => {
         let answersArray = [];
+        //Already have answers (Edit mode)
         if (existAnswers !== undefined) {
             existAnswers.map(ans => {
                 answersArray.push({ content: ans.content, correct: ans.correct });
             })
         }
+        //New fields (Create mode)
         else {
             answersArray = new Array(4).fill({ content: '', correct: false });
         }
         setAnswers(answersArray);
     }, [])
 
-    //Disable all checked correct answers if single choice is selected
+    //Disable all correct answers checked when changing to single choice
     useEffect(() => {
         if (singleChoice && answers.filter(ans => ans.correct === true).length > 1) {
             let answersArray = [...answers];
@@ -29,16 +33,13 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
         }
     }, [singleChoice])
 
-    useEffect(() => {
-        console.log(answers);
-    }, [answers])
+
     const removeAnswer = (index) => {
         //Bug here if content is not empty
         const answersArray = [...answers];
-        console.log(answersArray);
         const newarray = answersArray.filter((ans, ansIndex) => ansIndex !== index);
         console.log(newarray);
-        answersFromComp(newarray);
+        selectedAnswers(newarray);
         setAnswers(newarray);
     }
 
@@ -50,7 +51,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
         //If answer is empty, uncheck the correct
         ans.correct = data.trim() === '' && false;
         answersArray[index] = ans;
-        answersFromComp(answersArray);
+        selectedAnswers(answersArray);
         setAnswers(answersArray);
     }
     //Validate single answer can have only 1 correct
@@ -70,14 +71,14 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
             selectedAnswer.correct = !selectedAnswer.correct;
         }
         answersArray[index] = selectedAnswer;
-        answersFromComp(answersArray);
+        selectedAnswers(answersArray);
         setAnswers(answersArray);
     }
     const addAnswer = () => {
         const answersArray = [...answers];
         answersArray.push({ content: '', correct: false });
         setAnswers(answersArray);
-        answersFromComp(answersArray);
+        selectedAnswers(answersArray);
     }
 
     return (
@@ -86,7 +87,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
             <List>
                 {answers && answers.map((value, index) => (
                     <ListItem key={index} disableGutters>
-                        <div className="inputBlock">
+                        <div className="answerBlock">
                             <span>Answer {index + 1}:</span>
                             <CKEditor editor={ClassicEditor}
                                 config={{
@@ -96,6 +97,7 @@ const AnswersSelection = ({ questionID, singleChoice, answersFromComp, existAnsw
                                 onChange={(event, editor) => {
                                     editAnswer(editor, index);
                                 }}
+                                maxWidth={'200px'}
                             />
                             <div className="answerOptions">
                                 <Button color="error" onClick={() => removeAnswer(index)}>Remove</Button>

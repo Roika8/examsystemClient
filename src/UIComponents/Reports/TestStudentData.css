@@ -1,5 +1,51 @@
 .testsDataContainer {
     margin: auto;
-    height: calc(100vh - 300px);
     width: calc(100vw - 500px);
+}
+
+.studentHeader {
+    font-size: xx-large;
+    display: flex;
+    padding: 15px;
+}
+
+.studentHeader>.data {
+    color: orange;
+    padding-left: 10px;
+}
+
+.studentSubHeader {
+    font-size: x-large;
+    display: flex;
+    padding: 15px;
+}
+
+.studentSubHeader>.data {
+    color: orange;
+    padding-left: 10px;
+}
+
+.summeryHeader {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: start;
+}
+
+.testStudentContainer {
+    height: calc(100vh - 550px);
+    margin: auto;
+    margin-top: 2%;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.studentsQuestionsContainer {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 30px;
 }

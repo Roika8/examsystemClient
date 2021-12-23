@@ -1,15 +1,37 @@
+.testHeader {
+  font-weight: bolder;
+  text-align: center;
+  font-size: x-large;
+  padding: 10px;
+}
+
+.header.testTopic {
+  font-size: medium;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px;
+}
+
+.selectLanguage {
+  text-align: center;
+  padding: 10px;
+}
+
 .grade {
-    width: 80px;
+  width: 120px;
 }
 
 .header.id {
-    font-size: medium;
-    display: flex;
-    margin: auto;
-    align-items: flex-start;
+  font-size: small;
+  display: flex;
+  margin: auto;
+  align-items: flex-start;
+  text-decoration: underline;
 }
 
+
 .questionsListWrapper {
-  margin: auto;
-  width: calc(100vw - 550px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

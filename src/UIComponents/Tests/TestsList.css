@@ -1,0 +1,12 @@
+.testsDataContainter{
+    width: calc(100vw - 300px);
+    height: calc(100vh - 400px);
+    margin: auto;
+}
+.testsData{
+    text-align: center;
+    align-content: center;
+    width:70%;
+    margin: auto;
+    margin-top: 3%;
+}

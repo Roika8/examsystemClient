@@ -9,8 +9,7 @@ import parse from 'html-react-parser';
 import './QuestionsList.css';
 //Components
 import QuestionPreview from './QuestionPreview';
-//Services
-import questionsService from '../ApiServices/questionsService';
+import QuestionTitle from './QuestionTitle';
 const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existTestQuestions }) => {
     const history = useHistory();
     const [rows, setRows] = useState([]);
@@ -22,20 +21,26 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
         const rowsFromData = [];
         questionsList && questionsList.length > 0 &&
             questionsList.map(question => {
+                console.log(question);
+                //Get the parsed data
+                let parsedTitle = parse(question.title).props.children;
+                while (typeof (parsedTitle) === 'object') {
+                    parsedTitle = parsedTitle.props.children;
+                }
                 const rowObject =
                 {
                     id: question.ID,
                     'ID': question.ID,
-                    'Question Title and Tags': [question.tags, question.title],
+                    'Question Title and Tags': [question.tags, parsedTitle],
                     'Last change': question.lastChange,
                     'Question Type': question.isSingleChoice ? 'Singel' : 'Muilti',
-                    '# Of tests': 'לעבוד על השאילתה'
+                    '# Of tests': question.testCounter
                 }
                 rowsFromData.push(rowObject);
             });
         setRows(rowsFromData);
 
-        //Check if on test mode and show test exist questions --bug
+        //Check if on test mode and show test exist questions
         if (existTestQuestions && existTestQuestions.length > 0) {
             handleSelectedQuestions(existTestQuestions)
         }
@@ -55,12 +60,11 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
                 { history.push(`/questions/edit/${topicID}/${params.id}`); }
                 break;
             default:
-                console.log(params);
                 break;
         }
     }
 
-    //Get the selected answers Props
+    //Get the selected question Props
     const handleSelectedQuestions = (questionsIDs) => {
         if (questionsIDs.length !== 0) {
             const questionID = questionsIDs[0];
@@ -72,27 +76,17 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
                 selectedQuestions(questionsIDs);
             }
         }
-        else {
-            selectedQuestions([]);
-        }
-
     }
+
 
     //Define the columns
     const columns = [
         { field: 'ID', minWidth: 100, headerAlign: 'center', align: 'center' },
         {
-            field: 'Question Title and Tags', minWidth: 200, headerAlign: 'center', align: 'center', renderCell: (params) => {
+            field: 'Question Title and Tags', minWidth: 400, headerAlign: 'center', align: 'center', renderCell: (params) => {
                 return (
-                    <div className="questionTagsTitle">
-                        <div className="title" >
-                            {parse(params.value[1])}
-                        </div>
-                        <div className="tags">
-                            {params.value[0]}
-                        </div>
-                    </div>
-                );
+                    <QuestionTitle params={params} />
+                )
             }
         },
         { field: 'Last change', minWidth: 120, headerAlign: 'center', align: 'center' },
@@ -109,17 +103,8 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
                 );
             }
         },
-        {
-            field: 'Delete', minWidth: 100, headerAlign: 'center', align: 'center', renderCell: () => {
-                return (
-                    <React.Fragment>
-                        <Button className="childBtn" variant="contained" color="warning" disabled={true}>
-                            Delete
-                        </Button>
-                    </React.Fragment >
-                );
-            }
-        },
+        //Enable editing only if not on create test page
+        !test &&
         {
             field: 'Edit', minWidth: 100, headerAlign: 'center', align: 'center', renderCell: () => {
                 return (
@@ -134,20 +119,21 @@ const QuestionsList = ({ questionsList, topicID, test, selectedQuestions, existT
     ];
 
     return (
-        <div className="dataGrid">
+        <div className="questionDataContainer">
             <DataGrid rows={rows} columns={columns} selectionModel={existTestQuestions}
                 onSelectionModelChange={questionsIDs => { handleSelectedQuestions(questionsIDs); }}
                 onCellClick={clickedCell}
-                checkboxSelection={test} />
+                checkboxSelection={test} className='dataGrid'
+            />
             {
-                Object.keys(selectedQuestion).length > 0 &&
+                openAnswerPreview && Object.keys(selectedQuestion).length > 0 &&
                 <QuestionPreview question={selectedQuestion}
                     isDialogOpened={openAnswerPreview}
                     handleCloseDialog={() => setOpenAnswerPreview(false)}
                 />
             }
-
         </div>
+
     );
 }
 

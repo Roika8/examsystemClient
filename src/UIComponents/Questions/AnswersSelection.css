@@ -1,0 +1,21 @@
+.answersHeader {
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
+    margin-top: 5%;
+}
+
+.answerOptions {
+    margin-left: 10px;
+}
+
+.answerOptions .checkBox {
+    float: right;
+}
+
+.answerBlock {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin: auto;
+}

@@ -1,0 +1,35 @@
+.reportsMenuContainer {
+    display: grid;
+    grid-template-columns: auto;
+    place-items: center;
+    height: calc(100vh - 100px);
+    width: 95%;
+    margin: auto;
+}
+
+.reportsHeader {
+    display: flex;
+    flex-direction: column;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.iconContainer {
+    align-self: center;
+    margin-bottom: 20px;
+}
+
+.BackHome {
+    justify-self: center;
+    align-self: flex-start;
+}
+
+.reportButtonsContainer {
+    display: flex;
+    gap: 100px;
+}
+
+.reportBtn {
+    width: 200px;
+    height: 60px;
+}

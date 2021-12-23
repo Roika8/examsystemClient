@@ -7,6 +7,7 @@ const addStudent = async (student) => {
     }
     catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 }
 const getAllStudents = async () => {
@@ -15,7 +16,10 @@ const getAllStudents = async () => {
     }
     catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 }
+
+
 
 export default { addStudent, getAllStudents };

@@ -9,7 +9,6 @@ import QuestionsManagement from './PagesComponents/Questions/QuestionsManagement
 import CreateTest from './PagesComponents/Tests/CreateTest';
 import TestManagment from './PagesComponents/Tests/TestsManagement';
 import SearchStudentReport from './PagesComponents/Reports/Student/SearchStudentReport';
-import StudentsReports from './PagesComponents/Reports/Student/StudentsReports';
 import SearchTestReport from './PagesComponents/Reports/Test/SearchTestReport';
 import TestsReports from './PagesComponents/Reports/Test/TestsReports';
 import ReportsMenu from './PagesComponents/Reports/ReportsMenu';
@@ -36,7 +35,6 @@ const App = () => {
             {/*Reports routes */}
             <Route path='/reports/:topicID' exact component={ReportsMenu} />
             <Route path='/reports/:topicID/students' exact component={SearchStudentReport} />
-            <Route path='/reports/:topicID/students/:studentTestID' exact component={StudentsReports} />
 
             <Route path='/reports/:topicID/tests' exact component={SearchTestReport} />
             <Route path='/reports/:topicID/tests/:testID/from/:fromDate/to/:toDate' component={TestsReports} />

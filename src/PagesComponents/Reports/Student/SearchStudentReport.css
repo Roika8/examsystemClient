@@ -1,5 +1,26 @@
 .studentsTableContainer {
     width: 700px;
     margin: auto;
-    margin-top:100px;
+    margin-top: 3%;
+}
+
+.searchStudent {
+    text-align: center;
+    margin-top: 4%;
+}
+
+.selectedStudentDataContainer {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.selectedStudentDataContainer>div {
+    padding: 10px;
+    flex: auto;
+}
+
+.studentTestsDataContainer {
+    margin-top: 5%;
 }

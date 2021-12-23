@@ -5,7 +5,7 @@ const addQuestion = async (question) => {
         return await axios.post(`${config.questionPath}/addQuestion`, question);
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e.message);
     }
 }
 const getAllQuestionsByTopicID = async (id) => {
@@ -14,7 +14,7 @@ const getAllQuestionsByTopicID = async (id) => {
         return data;
     }
     catch (e) {
-        console.log(e.message);
+        throw new Error(e.message);
     }
 }
 const getAnswersByQuestionID = async (id) => {
@@ -24,6 +24,7 @@ const getAnswersByQuestionID = async (id) => {
     }
     catch (e) {
         console.log(e);
+        throw new Error(e);
     }
 }
 const getQuestionByID = async (id) => {
@@ -32,7 +33,7 @@ const getQuestionByID = async (id) => {
         return data;
     }
     catch (e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 const editQuestion = async (question, id) => {

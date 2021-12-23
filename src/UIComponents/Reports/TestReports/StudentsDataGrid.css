@@ -1,4 +1,5 @@
-.testPreview{
-    width: calc(100vw - 250px);
-    height: calc(100vh - 200px);
+
+.studentsData {
+    margin: auto;
+    width: 80%;
 }

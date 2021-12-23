@@ -5,8 +5,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 //Style
-import './QuestionsList.css';
-
+import '../Questions/QuestionsList.css';
+import './TestsList.css';
 //Services
 
 const TestsList = ({ testsList, topicID, selectedTests }) => {
@@ -34,24 +34,13 @@ const TestsList = ({ testsList, topicID, selectedTests }) => {
 
 
 
-    //Handle question actions
-    const clickedCell = (params) => {
-        switch (params.field) {
-            case 'Edit':
-                { history.push(`/tests/edit/${topicID}/${params.id}`); }
-                break;
-            default:
-                console.log(params);
-                break;
-        }
-    }
 
 
     //Define the columns
     const columns = [
         { field: 'Title', minWidth: 200, headerAlign: 'center', align: 'center' },
         { field: 'Last change', minWidth: 120, headerAlign: 'center', align: 'center' },
-        { field: 'Number of questions', minWidth: 150, headerAlign: 'center', align: 'center' },
+        { field: 'Number of questions', minWidth: 200, headerAlign: 'center', align: 'center' },
         {
             field: 'Edit', minWidth: 150, headerAlign: 'center', align: 'center', renderCell: () => {
                 return (
@@ -63,11 +52,38 @@ const TestsList = ({ testsList, topicID, selectedTests }) => {
                 );
             }
         },
+        {
+            field: 'Test URL', minWidth: 150, headerAlign: 'center', align: 'center', renderCell: () => {
+                return (
+                    <React.Fragment>
+                        <Button className="childBtn" variant="contained" color="primary">
+                            Copy URL
+                        </Button>
+                    </React.Fragment >
+                );
+            }
+        }
     ];
 
+    //Handle question actions
+    const clickedCell = (params) => {
+        switch (params.field) {
+            case 'Edit':
+                { history.push(`/tests/edit/${topicID}/${params.id}`); }
+                break;
+            case 'Test URL':
+                navigator.clipboard.writeText(`http://localhost:3000/studentTest/form/${params.id}`)
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
-        <div className="dataGrid">
-            <DataGrid rows={rows} columns={columns} onCellClick={clickedCell} checkboxSelection={true} />
+        <div className="testsDataContainter">
+            <DataGrid rows={rows} columns={columns}
+                onCellClick={clickedCell} checkboxSelection={true}
+                className='testsData' />
         </div>
     );
 }

@@ -19,10 +19,13 @@
 
 .english {
     justify-self: flex-start;
+    text-align: start;
 }
 
 .hebrew {
     justify-self: flex-end;
+    text-align: end;
+
 }
 
 

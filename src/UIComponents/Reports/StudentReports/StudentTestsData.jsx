@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
 import testService from '../../../ApiServices/testService';
-const StudentTestsData = ({ studentData, selectedStudentTest }) => {
+const StudentTestsData = ({ studentTestData, selectedStudentTest }) => {
     const [testsList, setTestsList] = useState([]);
     //Load all tests data by test ID
     useEffect(async () => {
-        const tests = [];
-        const testMapping = studentData.map(async (data) => {
-            const testData = await testService.getTestByID(data.testID);
-            testData.grade = data.testScore;
-            tests.push(testData);
-        });
-        Promise.all(testMapping).then(() => {
-            setTestsList(tests);
-        });
+        if (studentTestData) {
+            const tests = [];
+            const testMapping = studentTestData.map(async (data) => {
+                const testData = await testService.getTestByID(data.testID);
+                testData.grade = data.testScore;
+                tests.push(testData);
+            });
+            Promise.all(testMapping).then(() => {
+                setTestsList(tests);
+            });
+        }
 
-
-    }, [studentData])
+    }, [studentTestData])
     return (
         <>
             <TableContainer component={Paper}>

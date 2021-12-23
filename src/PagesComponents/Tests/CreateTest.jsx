@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 //Components
-import QuestionsList from '../../UIComponents/QuestionsList';
+import QuestionsList from '../../UIComponents/Questions/QuestionsList';
 //Matarial UI
 import { FormGroup, FormLabel, Select, MenuItem, Button, RadioGroup, Radio, FormControlLabel, TextField } from '@mui/material';
 import './CreateTest.css';
@@ -13,7 +13,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import questionsService from '../../ApiServices/questionsService';
 import testService from '../../ApiServices/testService';
 import topicService from '../../ApiServices/topicService';
-import testValidator from '../../ApiServices/testValidator';
+import testValidator from '../../Validators/testValidator';
+import QuestionsManagement from '../Questions/QuestionsManagement';
+import ErrorPage from '../ErrorPages/ErrorPage';
 const CreateTest = () => {
 
     const history = useHistory();
@@ -21,7 +23,7 @@ const CreateTest = () => {
 
     const [testID] = useState(existTestID === undefined ? uuidv4() : existTestID);
     const [topicName, setTopicName] = useState();
-    //Test propslg
+    //Test props
     const [isEnglish, setIsEnglish] = useState(false);
     const [title, setTitle] = useState('');
     const [testStarter, setTestStarter] = useState('');
@@ -31,25 +33,36 @@ const CreateTest = () => {
     const [failMessage, setFailMessage] = useState('');
     const [qustionsOptions, setQuestionsOptions] = useState([]);
     const [selectedQuestionsIDs, setSelectedQuestionsIDs] = useState([]);
+    const [error, setError] = useState({ isError: false, message: '' });
+
     useEffect(() => {
         if (existTestID !== undefined) {
+
             const getExistTest = async () => {
-                const test = await testService.getTestByID(testID)
-                if (test) {
-                    console.log(test);
-                    setTitle(test.title);
-                    setIsEnglish(test.isEnglish);
-                    setTestStarter(test.testStarter);
-                    setPassingGrade(test.passingGrade);
-                    setShowResults(test.showResults);
-                    setSuccessMessage(test.successMessage);
-                    setFailMessage(test.failMessage);
-                    const testQuestions = test.questions;
-                    const idsArray = [];
-                    testQuestions.map(question => idsArray.push(question.ID))
-                    setSelectedQuestionsIDs(idsArray)
+                try {
+                    const test = await testService.getTestByID(testID)
+                    if (test) {
+
+                        console.log(test);
+                        setTitle(test.title);
+                        setIsEnglish(test.isEnglish);
+                        setTestStarter(test.testStarter);
+                        setPassingGrade(test.passingGrade);
+                        setShowResults(test.showResults);
+                        setSuccessMessage(test.successMessage);
+                        setFailMessage(test.failMessage);
+                        const testQuestions = test.questions;
+                        const idsArray = [];
+                        testQuestions.map(question => idsArray.push(question.ID))
+                        console.log(idsArray);
+                        setSelectedQuestionsIDs(idsArray)
+                    }
+                }
+                catch (e) {
+                    setError({ isError: true, message: e.message });
                 }
             }
+
             getExistTest();
         }
 
@@ -90,114 +103,129 @@ const CreateTest = () => {
         }
 
         const testObj = { testID, isEnglish, title, testStarter, passingGrade, showResults, successMessage, failMessage, topicID, selectedQuestionsIDs }
-        const res = existTestID ? await testService.editTest(testObj) : await testService.addTest(testObj);
-        if (res) {
+        try {
+            existTestID ? await testService.editTest(testObj) : await testService.addTest(testObj);
             alert("Test added successfully");
             history.push(`/tests/${topicID}`)
+
         }
-        else alert("Somthing went wrong adding test");
+        catch (e) {
+            alert(e.message);
+        }
 
     }
     return (
-        <div className="formContainer">
-            <FormGroup>
-                <div className="header">Create new Test </div>
-                <div className="header topic">Topic : {topicName} </div>
-                <div className="header id">Test ID: {testID}</div>
+        <>
+            {
+                error.isError ?
+                    <ErrorPage errorMsg={error.message} location={'Edit test'} />
+                    :
+                    <div className="formContainer">
+                        <div className="testHeader">Create new Test </div>
+                        <div className="header testTopic">Topic : {topicName} </div>
+                        <div className="header id">Test ID: {testID}</div>
 
-                <div className="inputBlock">
-                    <span>select question language: </span>
-                    <Select value={isEnglish} onChange={(e) => { setIsEnglish(e.target.value) }}>
-                        <MenuItem value={false}>English</MenuItem>
-                        <MenuItem value={true}>עברית</MenuItem>
-                    </Select>
-                </div>
-                <div className="inputBlock testTitle">
-                    <TextField
-                        label="Title"
-                        variant="filled"
-                        value={title}
-                        onChange={(e) => {
-                            setTitle(e.target.value);
-                        }}
-                        inputProps={{ maxLength: 20 }}
-                    />
-                </div>
-                <div className="inputBlock grade">
-                    <TextField
-                        label="Grade"
-                        type="number"
-                        variant="filled"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={passingGrade}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            var isNumber = /^\d+$/.test(val);
-                            if (isNumber && val < 100 && val >= 0)
-                                setPassingGrade(e.target.value)
-                        }}
-                    />
-                </div>
-                <div className="inputBlock">
-                    <span>Enter test starter:</span>
-                    <CKEditor className="editor" editor={ClassicEditor}
-                        config={{
-                            removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
-                        }}
-                        data={testStarter}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            console.log(data);
-                            setTestStarter(data);
-                        }}
-                    />
-                </div>
-                <div className="inputBlock">
-                    <FormLabel >Show results</FormLabel>
-                    <RadioGroup row value={showResults} onChange={(e) => setShowResults(e.target.value)}>
-                        <FormControlLabel value={true} control={<Radio />} label="Show" />
-                        <FormControlLabel value={false} control={<Radio />} label="Hide" />
-                    </RadioGroup>
-                </div>
-                <div className="inputBlock">
-                    <span>Enter success message:</span>
-                    <CKEditor className="editor" editor={ClassicEditor}
-                        config={{
-                            removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
-                        }}
-                        data={successMessage}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            setSuccessMessage(data);
-                        }}
-                    />
-                </div>
-                <div className="inputBlock">
-                    <span>Enter fail message:</span>
-                    <CKEditor className="editor" editor={ClassicEditor}
-                        config={{
-                            removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
-                        }}
-                        data={failMessage}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            setFailMessage(data);
-                        }}
-                    />
-                </div>
-                <div className="questionsListWrapper">
-                    <QuestionsList topicID={topicID} questionsList={qustionsOptions} test={true} existSelectedQuestions={selectedQuestionsIDs}
-                        selectedQuestions={(questionsIds) => { setSelectedQuestionsIDs(questionsIds); }} />
-                </div>
-                <div className="buttons">
-                    <Button className="childBtn" component={Link} to="/questions" variant="contained" color="warning">Back</Button>
-                    <Button className="childBtn" color="success" variant="contained" onClick={() => submitTest()}>Create </Button>
-                </div>
-            </FormGroup>
+                        <div className="inputBlock">
+                            <div>select question language: </div>
+                            <div className='selectLanguage'>
+                                <Select value={isEnglish} onChange={(e) => { setIsEnglish(e.target.value) }}>
+                                    <MenuItem value={true}>English</MenuItem>
+                                    <MenuItem value={false}>עברית</MenuItem>
+                                </Select>
+                            </div>
 
-        </div >
+                        </div>
+                        <div className='inputBlock' >
+                            <TextField
+                                fullWidth
+                                label="Title"
+                                variant="filled"
+                                value={title}
+                                onChange={(e) => {
+                                    setTitle(e.target.value);
+                                }}
+                                inputProps={{ maxLength: 200 }}
+                            />
+                        </div>
+                        <div className="inputBlock grade">
+                            <TextField
+                                label="Passing Grade"
+                                type="number"
+                                variant="filled"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                value={passingGrade}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    var isNumber = /^\d+$/.test(val);
+                                    if (isNumber && val < 100 && val >= 0)
+                                        setPassingGrade(e.target.value)
+                                }}
+                            />
+                        </div>
+                        <div className="inputBlock">
+                            <span>Enter test starter:</span>
+                            <CKEditor className="editor" editor={ClassicEditor}
+                                config={{
+                                    removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
+                                }}
+                                data={testStarter}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    console.log(data);
+                                    setTestStarter(data);
+                                }}
+                            />
+                        </div>
+                        <div className="inputBlock">
+                            <FormLabel >Show results</FormLabel>
+                            <RadioGroup row value={showResults} onChange={(e) => setShowResults(e.target.value)}>
+                                <FormControlLabel value={true} control={<Radio />} label="Show" />
+                                <FormControlLabel value={false} control={<Radio />} label="Hide" />
+                            </RadioGroup>
+                        </div>
+                        <div className="inputBlock">
+                            <span>Enter success message:</span>
+                            <CKEditor className="editor" editor={ClassicEditor}
+                                config={{
+                                    minWidth: 500,
+                                    removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
+                                }}
+                                data={successMessage}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setSuccessMessage(data);
+                                }}
+                                style={{ maxWidth: '400px' }}
+                            />
+                        </div>
+                        <div className="inputBlock">
+                            <span>Enter fail message:</span>
+                            <CKEditor className="editor" editor={ClassicEditor}
+                                config={{
+                                    removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed", "BlockQuote", "Table", "Heading"]
+                                }}
+                                data={failMessage}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setFailMessage(data);
+                                }}
+                            />
+                        </div>
+                        <div className="questionsListWrapper">
+                            <QuestionsManagement inCreateTest={true} existTestQuestions={selectedQuestionsIDs}
+                                setSelectedQuestionsIDs={(questionsIds) => { setSelectedQuestionsIDs(questionsIds) }} />
+                            {/* <QuestionsList topicID={topicID} questionsList={qustionsOptions} test={true} existTestQuestions={selectedQuestionsIDs}
+                    selectedQuestions={(questionsIds) => { setSelectedQuestionsIDs(questionsIds); }} /> */}
+                        </div>
+                        <div className="buttons">
+                            <Button className="childBtn" component={Link} to="/questions" variant="contained" color="warning">Back</Button>
+                            <Button className="childBtn" color="success" variant="contained" onClick={() => submitTest()}>Create </Button>
+                        </div>
+                    </div >
+            }
+        </>
     )
 }
 export default CreateTest;

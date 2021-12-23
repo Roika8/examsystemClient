@@ -1,9 +1,14 @@
-.dataGrid {
-    height: calc(100vh - 250px);
+.questionDataContainer {
     width: calc(100vw - 100px);
-    margin-top: 1%;
+    height: calc(100vh - 400px);
+}
+
+.dataGrid {
     text-align: center;
     align-content: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 3%;
 }
 
 .questionTagsTitle {
